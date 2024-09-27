@@ -50,7 +50,22 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
     () => [
       {
         id: "expander",
-        header: () => null, // Remove the header content
+        header: ({ table }) => (
+          <IconButton
+            aria-label="Expand all"
+            icon={
+              table.getIsAllRowsExpanded() ? (
+                <ChevronDownIcon />
+              ) : (
+                <ChevronRightIcon />
+              )
+            }
+            onClick={table.getToggleAllRowsExpandedHandler()}
+            size="sm"
+            variant="ghost"
+            color={textColor}
+          />
+        ),
         cell: ({ row }) => (
           <IconButton
             aria-label="Expand row"
