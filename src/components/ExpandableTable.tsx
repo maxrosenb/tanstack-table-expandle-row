@@ -21,7 +21,7 @@ import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import ExpandedRowContent from "./ExpandedRowContent";
 
 interface DataItem {
-  id: string; // Add this line
+  id: string;
   name: string;
   age: number;
   email: string;
@@ -66,14 +66,32 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
             variant="ghost"
           />
         ),
+        size: 50,
       },
       {
         header: "Name",
         accessorKey: "name",
+        size: 200,
       },
       {
         header: "Age",
         accessorKey: "age",
+        size: 100,
+      },
+      {
+        header: "Email",
+        accessorKey: "email",
+        size: 250,
+      },
+      {
+        header: "Phone",
+        accessorKey: "phone",
+        size: 150,
+      },
+      {
+        header: "Address",
+        accessorKey: "address",
+        size: 300,
       },
     ],
     []
@@ -92,13 +110,13 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
   });
 
   return (
-    <Box overflowX="auto">
-      <Table variant="simple">
+    <Box overflowX="auto" width="100%">
+      <Table variant="simple" style={{ width: "100%", tableLayout: "fixed" }}>
         <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <Th key={header.id}>
+                <Th key={header.id} width={header.column.getSize()}>
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext()
@@ -113,7 +131,7 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
             <React.Fragment key={row.id}>
               <Tr>
                 {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id}>
+                  <Td key={cell.id} width={cell.column.getSize()}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </Td>
                 ))}
