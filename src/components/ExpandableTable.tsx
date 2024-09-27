@@ -19,24 +19,17 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import ExpandedRowContent from "./ExpandedRowContent";
-
-interface DataItem {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  phone: string;
-  address: string;
-  employmentStatus: string;
-  eyeColor: string;
-}
+import { motion, AnimatePresence } from "framer-motion";
+import { ExpandedRowContent } from "./ExpandedRowContent";
+import { AlbumItem } from "../utils/mockData";
 
 interface ExpandableTableProps {
-  data: DataItem[];
+  data: AlbumItem[];
 }
 
 const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
+  console.log("Table data:", data); // Add this line
+
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
   const bgColor = useColorModeValue("white", "gray.800");
@@ -46,26 +39,11 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
   const textColor = useColorModeValue("gray.800", "gray.100");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
-  const columns = useMemo<ColumnDef<DataItem>[]>(
+  const columns = useMemo<ColumnDef<AlbumItem>[]>(
     () => [
       {
         id: "expander",
-        header: ({ table }) => (
-          <IconButton
-            aria-label="Expand all"
-            icon={
-              table.getIsAllRowsExpanded() ? (
-                <ChevronDownIcon />
-              ) : (
-                <ChevronRightIcon />
-              )
-            }
-            onClick={table.getToggleAllRowsExpandedHandler()}
-            size="sm"
-            variant="ghost"
-            color={textColor}
-          />
-        ),
+        header: () => null,
         cell: ({ row }) => (
           <IconButton
             aria-label="Expand row"
@@ -81,19 +59,19 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
         size: 50,
       },
       {
-        header: "Name",
-        accessorKey: "name",
+        header: "Album Name",
+        accessorKey: "title",
         size: 200,
       },
       {
-        header: "Age",
-        accessorKey: "age",
-        size: 100,
+        header: "Artist",
+        accessorKey: "artist",
+        size: 150,
       },
       {
-        header: "Phone",
-        accessorKey: "phone",
-        size: 150,
+        header: "Release Year",
+        accessorKey: "releaseDate",
+        size: 100,
       },
     ],
     [textColor]
@@ -160,19 +138,33 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
                   </Td>
                 ))}
               </Tr>
-              {row.getIsExpanded() && (
-                <Tr>
-                  <Td
-                    colSpan={row.getVisibleCells().length}
-                    p={0}
-                    borderColor={borderColor}
+              <AnimatePresence initial={false}>
+                {row.getIsExpanded() && (
+                  <motion.tr
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
-                    <Box p={4} bg={expandedBgColor} borderRadius="md">
-                      <ExpandedRowContent rowData={row.original} />
-                    </Box>
-                  </Td>
-                </Tr>
-              )}
+                    <Td
+                      colSpan={row.getVisibleCells().length}
+                      p={0}
+                      borderColor={borderColor}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                      >
+                        <Box p={4} bg={expandedBgColor} borderRadius="md">
+                          <ExpandedRowContent rowData={row.original} />
+                        </Box>
+                      </motion.div>
+                    </Td>
+                  </motion.tr>
+                )}
+              </AnimatePresence>
             </React.Fragment>
           ))}
         </Tbody>

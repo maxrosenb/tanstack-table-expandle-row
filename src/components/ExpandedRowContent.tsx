@@ -1,60 +1,75 @@
 import React from "react";
-import { Box, Text, Flex, useColorModeValue } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Box,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
+import { AlbumItem, Song } from "../utils/mockData";
 
 interface ExpandedRowContentProps {
-  rowData: {
-    id: string;
-    name: string;
-    age: number;
-    email: string;
-    phone: string;
-    address: string;
-    employmentStatus: string;
-    eyeColor: string;
-  };
+  rowData: Partial<AlbumItem>;
 }
 
-const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ rowData }) => {
-  const bgColor = useColorModeValue("gray.50", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.800", "gray.100");
-  const labelColor = useColorModeValue("blue.600", "blue.300");
+export const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({
+  rowData,
+}) => {
+  console.log("Expanded row data:", rowData); // Add this line
+  const { songs = [], ...albumInfo } = rowData;
+  const entries = Object.entries(albumInfo);
 
   return (
-    <Box
-      borderRadius="md"
-      overflow="hidden"
-      borderWidth={1}
-      borderColor={borderColor}
-      bg={bgColor}
-    >
-      <Flex flexWrap="wrap" p={4}>
-        <Box flexBasis="50%" p={2}>
-          <Text fontWeight="bold" color={labelColor}>
-            Email
-          </Text>
-          <Text color={textColor}>{rowData.email}</Text>
-        </Box>
-        <Box flexBasis="50%" p={2}>
-          <Text fontWeight="bold" color={labelColor}>
-            Address
-          </Text>
-          <Text color={textColor}>{rowData.address}</Text>
-        </Box>
-        <Box flexBasis="50%" p={2}>
-          <Text fontWeight="bold" color={labelColor}>
-            Employment Status
-          </Text>
-          <Text color={textColor}>{rowData.employmentStatus}</Text>
-        </Box>
-        <Box flexBasis="50%" p={2}>
-          <Text fontWeight="bold" color={labelColor}>
-            Eye Color
-          </Text>
-          <Text color={textColor}>{rowData.eyeColor}</Text>
-        </Box>
-      </Flex>
-    </Box>
+    <VStack align="stretch" spacing={4}>
+      <Box overflowX="auto">
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              {entries.map(([key]) => (
+                <Th key={key}>{key}</Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              {entries.map(([key, value]) => (
+                <Td key={key}>{value?.toString() || "N/A"}</Td>
+              ))}
+            </Tr>
+          </Tbody>
+        </Table>
+      </Box>
+
+      <Box>
+        <Text fontWeight="bold" mb={2}>
+          Songs:
+        </Text>
+        {Array.isArray(songs) && songs.length > 0 ? (
+          <Table size="sm">
+            <Thead>
+              <Tr>
+                <Th>Title</Th>
+                <Th>Duration</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {songs.map((song: Song) => (
+                <Tr key={song.id}>
+                  <Td>{song.title}</Td>
+                  <Td>{song.duration}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        ) : (
+          <Text>No songs available for this album.</Text>
+        )}
+      </Box>
+    </VStack>
   );
 };
 

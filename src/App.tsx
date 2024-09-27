@@ -12,19 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import ExpandableTable from "./components/ExpandableTable";
+import { createRandomAlbums, AlbumItem } from "./utils/mockData";
+import { format } from "date-fns";
 
-interface DataItem {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  phone: string;
-  address: string;
-  employmentStatus: string;
-  eyeColor: string;
-}
+import "focus-visible";
 
-// Define a custom theme with dark mode as default
+// Define a custom theme with dark mode as default and button styles
 const theme = extendTheme({
   config: {
     initialColorMode: "dark",
@@ -35,6 +28,11 @@ const theme = extendTheme({
       body: {
         bg: props.colorMode === "dark" ? "gray.900" : "gray.50",
         color: props.colorMode === "dark" ? "gray.100" : "gray.800",
+      },
+      // Add this CSS rule to remove focus styles after mouse clicks
+      ".js-focus-visible :focus:not([data-focus-visible-added])": {
+        outline: "none",
+        boxShadow: "none",
       },
     }),
   },
@@ -50,16 +48,17 @@ const ColorModeToggle = () => {
 };
 
 const App: React.FC = () => {
-  const [data, setData] = useState<DataItem[]>([]);
+  const [data, setData] = useState<AlbumItem[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/data?count=5")
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.error("Error fetching data:", error));
+    setData(
+      createRandomAlbums(10).map((album) => ({
+        ...album,
+        releaseDate: format(new Date(album.releaseDate), "MMMM d yyyy"),
+      }))
+    );
   }, []);
 
-  console.log(data);
   return (
     <ChakraProvider theme={theme}>
       <Box minHeight="100vh">
@@ -73,7 +72,7 @@ const App: React.FC = () => {
           <VStack spacing={4} mb={8} width="100%">
             <Flex justify="space-between" width="100%" align="center">
               <Heading as="h1" size="xl">
-                Expandable Table Example
+                Classic Rock Albums (60s-70s)
               </Heading>
               <ColorModeToggle />
             </Flex>
