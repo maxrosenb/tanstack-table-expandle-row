@@ -1,6 +1,6 @@
 import React from "react";
 import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
-import ExpandableTable from "./ExpandableTable";
+import ExpandableTable from "./components/ExpandableTable";
 
 interface DataItem {
   id: string;

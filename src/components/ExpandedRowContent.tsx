@@ -15,36 +15,26 @@ interface ExpandedRowContentProps {
   };
 }
 
-interface DetailItem {
-  detail: string;
-  value: string;
-}
-
-export const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({
-  rowData,
-}) => {
-  const columns = useMemo<ColumnDef<DetailItem>[]>(
+const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ rowData }) => {
+  const columns = useMemo<ColumnDef<typeof rowData>[]>(
     () => [
       {
-        header: "Detail",
-        accessorKey: "detail",
+        header: "Email",
+        accessorKey: "email",
       },
       {
-        header: "Value",
-        accessorKey: "value",
+        header: "Phone",
+        accessorKey: "phone",
+      },
+      {
+        header: "Address",
+        accessorKey: "address",
       },
     ],
     []
   );
 
-  const data = useMemo<DetailItem[]>(
-    () => [
-      { detail: "Email", value: rowData.email },
-      { detail: "Phone", value: rowData.phone },
-      { detail: "Address", value: rowData.address },
-    ],
-    [rowData]
-  );
+  const data = useMemo(() => [rowData], [rowData]);
 
   const table = useReactTable({
     data,
