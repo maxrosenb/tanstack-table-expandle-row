@@ -1,77 +1,39 @@
-import React, { useMemo } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-} from "@tanstack/react-table";
-import { Table, Thead, Tbody, Tr, Th, Td, Box } from "@chakra-ui/react";
+import React from "react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
 interface ExpandedRowContentProps {
   rowData: {
+    id: string;
+    name: string;
+    age: number;
     email: string;
     phone: string;
     address: string;
+    employmentStatus: string;
+    eyeColor: string;
   };
 }
 
 const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ rowData }) => {
-  const columns = useMemo<ColumnDef<typeof rowData>[]>(
-    () => [
-      {
-        header: "Email",
-        accessorKey: "email",
-      },
-      {
-        header: "Phone",
-        accessorKey: "phone",
-      },
-      {
-        header: "Address",
-        accessorKey: "address",
-      },
-    ],
-    []
-  );
-
-  const data = useMemo(() => [rowData], [rowData]);
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
   return (
-    <Box p={4} bg="gray.50">
-      <Table size="sm" variant="simple">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Th key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Td>
-              ))}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </Box>
+    <Table size="sm" variant="simple">
+      <Thead>
+        <Tr>
+          <Th>Email</Th>
+          <Th>Address</Th>
+          <Th>Employment Status</Th>
+          <Th>Eye Color</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        <Tr>
+          <Td>{rowData.email}</Td>
+          <Td>{rowData.address}</Td>
+          <Td>{rowData.employmentStatus}</Td>
+          <Td>{rowData.eyeColor}</Td>
+        </Tr>
+      </Tbody>
+    </Table>
   );
 };
 

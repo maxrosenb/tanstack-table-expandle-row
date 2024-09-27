@@ -27,6 +27,8 @@ interface DataItem {
   email: string;
   phone: string;
   address: string;
+  employmentStatus: string;
+  eyeColor: string;
 }
 
 interface ExpandableTableProps {
@@ -79,19 +81,9 @@ const ExpandableTable: React.FC<ExpandableTableProps> = ({ data }) => {
         size: 100,
       },
       {
-        header: "Email",
-        accessorKey: "email",
-        size: 250,
-      },
-      {
         header: "Phone",
         accessorKey: "phone",
         size: 150,
-      },
-      {
-        header: "Address",
-        accessorKey: "address",
-        size: 300,
       },
     ],
     []
