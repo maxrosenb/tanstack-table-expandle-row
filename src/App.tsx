@@ -1,5 +1,16 @@
 import React from "react";
-import { ChakraProvider, Flex, Heading } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Flex,
+  Heading,
+  Box,
+  extendTheme,
+  useColorMode,
+  Button,
+  VStack,
+  ThemeComponentProps,
+} from "@chakra-ui/react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import ExpandableTable from "./components/ExpandableTable";
 
 interface DataItem {
@@ -12,6 +23,31 @@ interface DataItem {
   employmentStatus: string;
   eyeColor: string;
 }
+
+// Define a custom theme with dark mode as default
+const theme = extendTheme({
+  config: {
+    initialColorMode: "dark",
+    useSystemColorMode: false,
+  },
+  styles: {
+    global: (props: ThemeComponentProps) => ({
+      body: {
+        bg: props.colorMode === "dark" ? "gray.900" : "gray.50",
+        color: props.colorMode === "dark" ? "gray.100" : "gray.800",
+      },
+    }),
+  },
+});
+
+const ColorModeToggle = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <Button onClick={toggleColorMode} size="sm" variant="outline">
+      {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+    </Button>
+  );
+};
 
 const App: React.FC = () => {
   const data: DataItem[] = React.useMemo(
@@ -51,19 +87,26 @@ const App: React.FC = () => {
   );
 
   return (
-    <ChakraProvider>
-      <Flex
-        direction="column"
-        align="center"
-        justify="center"
-        minHeight="100vh"
-        p={8}
-      >
-        <Heading as="h1" mb={4} textAlign="center">
-          Expandable Table Example
-        </Heading>
-        <ExpandableTable data={data} />
-      </Flex>
+    <ChakraProvider theme={theme}>
+      <Box minHeight="100vh">
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          minHeight="100vh"
+          p={8}
+        >
+          <VStack spacing={4} mb={8} width="100%">
+            <Flex justify="space-between" width="100%" align="center">
+              <Heading as="h1" size="xl">
+                Expandable Table Example
+              </Heading>
+              <ColorModeToggle />
+            </Flex>
+          </VStack>
+          <ExpandableTable data={data} />
+        </Flex>
+      </Box>
     </ChakraProvider>
   );
 };
