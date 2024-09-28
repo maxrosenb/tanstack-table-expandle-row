@@ -19,7 +19,6 @@ interface ExpandedRowContentProps {
 export const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({
   rowData,
 }) => {
-  console.log("Expanded row data:", rowData); // Add this line
   const { songs = [], ...albumInfo } = rowData;
   const entries = Object.entries(albumInfo);
 
